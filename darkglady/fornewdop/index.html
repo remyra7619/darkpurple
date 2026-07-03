@@ -274,13 +274,10 @@ button>
  let myName = '';
  let isReady = false;
  let reconnectAttempts = 0;
- // --- Инициализация
-с правильными настройками ---
+ // --- Инициализация с правильными настройками ---
  function initPeer() {
  const status = document.getElementById('statusBadge');
- status.textContent = '
-🔄
-Подключение...';
+ status.textContent = '🔄Подключение...';
  status.className = 'status';
  // Генерируем случайное имя
  const names = ['Гипсик', 'Нейро', 'Линк', 'Тень', 'Кодер', 'Меценат', 'Странник', 'Ворон', 'Феникс', 'Дракон', 'Самурай', 'Ниндзя'];
@@ -296,10 +293,7 @@ Math.floor(Math.random() * 100);
  { urls: 'stun:stun2.l.google.com:19302' },
  { urls: 'stun:stun3.l.google.com:19302' },
  { urls: 'stun:stun4.l.google.com:19302' },
- {
-
- urls: 'turn:turn.any
-firewall.com:443?transport=tcp',
+ {urls: 'turn:turn.anyfirewall.com:443?transport=tcp',
  username: 'webrtc',
  credential: 'webrtc'
  },
@@ -316,8 +310,7 @@ firewall.com:443?transport=tcp',
  peer.on('open', (id) => {
  myId = id;
  document.getElementById('myPeerId').value = id;
- status.textContent = '
-🟢 Онлайн';
+ status.textContent = '🟢 Онлайн';
  status.className = 'status online';
  isReady = true;
  reconnectAttempts = 0;
