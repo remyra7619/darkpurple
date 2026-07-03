@@ -31,7 +31,7 @@ flex;
  .header {
  display:
 flex;
-Text to PDF
+
  justify-content: space-between;
  align-items: center;
  border-bottom: 1px solid #1f3f3a;
@@ -64,7 +64,7 @@ rgba(42,255,182,0.1); }
  padding: 12px 18px;
  margin-bottom: 16px;
  border: 1px solid #1a2f2a;
-Text to PDF
+
  display:
 flex;
  gap: 12px;
@@ -99,7 +99,7 @@ flex: 1;
  .btn:hover {
  background: #2affb6;
  color: #080c16;
-Text to PDF
+
  box-shadow: 0 0 30px rgba(42,255,182,0.3);
  }
  .btn-primary {
@@ -132,7 +132,7 @@ flow-y: auto;
  border-radius: 12px;
  background: #0f1e24;
  border: 1px solid #1a2f2a;
-Text to PDF
+
  display:
 flex;
  gap: 12px;
@@ -167,7 +167,7 @@ flex: 1;
  .input-area input:focus { border-color: #2affb6; }
  .input-area input:disabled { opacity: 0.4; cursor: not-allowed; }
  .user-list {
-Text to PDF
+
  display:
 flex;
  gap: 8px;
@@ -202,7 +202,7 @@ fline { border-color: #4a3a3a; color: #6a5a5a; }
  .info-box strong { color: #b3ffd9; }
  @media (max-width: 600px) {
  .chat-container { padding: 16px; }
-Text to PDF
+
  .peer-id-box {
 flex-direction: column; }
  }
@@ -236,7 +236,7 @@ title="Перезапустить соединение">🔄 </button>
  <span style="color:#6a8f7a; font-size:14px;">🔗 Подключиться
 к
 собеседнику:</span>
-Text to PDF
+
  <div style="display:
 flex; gap:10px; margin-top:6px;
 flex-wrap:wrap;">
@@ -267,7 +267,7 @@ button>
  // P2P ЧАТ
 С ПОДДЕРЖКОЙ STUN/TURN
  // =============================================
-Text to PDF
+
  let peer = null;
  let connections = {};
  let myId = '';
@@ -297,7 +297,7 @@ Math.floor(Math.random() * 100);
  { urls: 'stun:stun3.l.google.com:19302' },
  { urls: 'stun:stun4.l.google.com:19302' },
  {
-Text to PDF
+
  urls: 'turn:turn.any
 firewall.com:443?transport=tcp',
  username: 'webrtc',
@@ -331,7 +331,7 @@ firewall.com:443?transport=tcp',
 подключения`);
 
  // Активируем ввод
-Text to PDF
+
  document.getElementById('msgInput').disabled = false;
  document.getElementById('sendBtn').disabled = false;
  document.getElementById('msgInput').focus();
@@ -364,7 +364,7 @@ Text to PDF
  status.className = 'status error';
  addSystemMessage(`
 ❌ Ошибка: ${err.message || err}`);
-Text to PDF
+
 
  // Пытаемся переподключиться
  if (reconnectAttempts < 3) {
@@ -398,7 +398,7 @@ Text to PDF
  setTimeout(() => initPeer(), 2000);
  }, 3000);
  }
-Text to PDF
+
  });
  // Сохраняем
 в глобальный доступ
@@ -430,7 +430,7 @@ Text to PDF
  text: `${myName} присоединился
 к чату`,
  user: myName
-Text to PDF
+
  });
  addSystemMessage(`
 ✅ ${peerId} подключился`);
@@ -468,7 +468,7 @@ Text to PDF
 
  const conn = peer.connect(targetId, {
  reliable: true
-Text to PDF
+
  });
  // Настройка обработчиков
  setupConnectionHandlers(conn, targetId);
@@ -500,7 +500,7 @@ Text to PDF
  // Обработка входящих данных
  conn.on('data', (data) => {
  handleMessage(data, peerId);
-Text to PDF
+
  });
  // Закрытие соединения
  conn.on('close', () => {
@@ -531,7 +531,7 @@ Text to PDF
  if (data.type === 'message') {
  addMessage(data.user || 'Аноним', data.text, false);
  return;
-Text to PDF
+
  }
  if (data.type === 'ping') {
  // Ответ на ping
@@ -559,7 +559,7 @@ Text to PDF
  for (let id in connections) {
  try {
  connections[id].send(msgData);
-Text to PDF
+
  sentCount++;
  } catch (e) {
  console.warn('Не удалось отправить:', e);
@@ -588,7 +588,7 @@ minute:'2-digit'})}</span>
  container.appendChild(div);
  container.scrollTop = container.scrollHeight;
  }
-Text to PDF
+
  function addSystemMessage(text) {
  const container = document.getElementById('messagesContainer');
  const div = document.createElement('div');
@@ -620,7 +620,7 @@ fline';
  container.appendChild(empty);
  }
 
-Text to PDF
+
  ids.forEach(id => {
  const tag = document.createElement('span');
  tag.className = 'user-tag online';
@@ -656,7 +656,7 @@ Text to PDF
 вручную');
  });
  }
-Text to PDF
+
  }
  // --- Сброс соединения ---
  function resetConnection() {
@@ -686,7 +686,7 @@ firm('Перезапустить соединение?')) {
  }
  // --- Enter ---
  document.getElementById('msgInput').addEventListener('keydown', (e) => {
-Text to PDF
+
  if (e.key === 'Enter') sendMessage();
  });
  document.getElementById('targetPeerId').addEventListener('keydown', (e) => {
