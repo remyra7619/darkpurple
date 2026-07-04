@@ -225,8 +225,7 @@
           <button class="btn btn-danger" onclick="resetConnection()"title="Перезапустить соединение">🔄 </button>
      </div>
  <div>
- <span style="color:#6a8f7a; font-size:14px;">🔗 Подключиться к собеседнику:</span>
-
+       <span style="color:#6a8f7a; font-size:14px;">🔗 Подключиться к собеседнику:</span>
        <div style="display:flex; gap:10px; margin-top:6px; flex-wrap:wrap;">
            <input type="text" id="targetPeerId" placeholder="Введите ID собеседника..." style="flex:1; background:#0b141c; border:1px solid #1f3f3a; borderradius:40px; padding:10px 18px; color:#d0ece4; font-family:inherit; outline:none; minwidth:150px;" />
            <button class="btn btn-primary" onclick="connectToPeer()">🔗Подключиться</button>
@@ -259,57 +258,57 @@
  let reconnectAttempts = 0;
  // --- Инициализация с правильными настройками ---
  function initPeer() {
- const status = document.getElementById('statusBadge');
- status.textContent = '🔄Подключение...';
- status.className = 'status';
- // Генерируем случайное имя
- const names = ['Гипсик', 'Нейро', 'Линк', 'Тень', 'Кодер', 'Меценат', 'Странник', 'Ворон', 'Феникс', 'Дракон', 'Самурай', 'Ниндзя'];
- myName = names[Math.floor(Math.random() * names.length)] + Math.floor(Math.random() * 100);
- // ПРАВИЛЬНЫЕ НАСТРОЙКИ PEER.JS
- peer = new Peer(undefined, {
- debug: 2,
- config: {
- iceServers: [
- { urls: 'stun:stun.l.google.com:19302' },
- { urls: 'stun:stun1.l.google.com:19302' },
- { urls: 'stun:stun2.l.google.com:19302' },
- { urls: 'stun:stun3.l.google.com:19302' },
- { urls: 'stun:stun4.l.google.com:19302' },
- {urls: 'turn:turn.anyfirewall.com:443?transport=tcp',
- username: 'webrtc',
- credential: 'webrtc'
- },
- {
- urls: 'turn:turn.bistri.com:80',
- username: 'homeo',
- credential: 'homeo'
- }
- ]
- }
- });
+   const status = document.getElementById('statusBadge');
+   status.textContent = '🔄Подключение...';
+   status.className = 'status';
+   // Генерируем случайное имя
+   const names = ['Гипсик', 'Нейро', 'Линк', 'Тень', 'Кодер', 'Меценат', 'Странник', 'Ворон', 'Феникс', 'Дракон', 'Самурай', 'Ниндзя'];
+   myName = names[Math.floor(Math.random() * names.length)] + Math.floor(Math.random() * 100);
+   // ПРАВИЛЬНЫЕ НАСТРОЙКИ PEER.JS
+   peer = new Peer(undefined, {
+           debug: 2,
+           config: {
+                 iceServers: [
+                     { urls: 'stun:stun.l.google.com:19302' },
+                     { urls: 'stun:stun1.l.google.com:19302' },
+                     { urls: 'stun:stun2.l.google.com:19302' },
+                     { urls: 'stun:stun3.l.google.com:19302' },
+                     { urls: 'stun:stun4.l.google.com:19302' },
+                     {urls: 'turn:turn.anyfirewall.com:443?transport=tcp',
+                     username: 'webrtc',
+                     credential: 'webrtc'
+                     },
+                   {
+                       urls: 'turn:turn.bistri.com:80',
+                       username: 'homeo',
+                       credential: 'homeo'
+                   }
+               ]
+           }
+        });
  // --- СОБЫТИЯ PEER ---
  // Получение ID
  peer.on('open', (id) => {
- myId = id;
- document.getElementById('myPeerId').value = id;
- status.textContent = '🟢 Онлайн';
- status.className = 'status online';
- isReady = true;
- reconnectAttempts = 0;
-
- addSystemMessage(`✅ Ваш ID: ${id}`);
- addSystemMessage(`👤 Вы вошли как: ${myName}`);
- addSystemMessage(`💡 Отправьте ваш ID собеседнику для подключения`);
-
- // Активируем ввод
-
- document.getElementById('msgInput').disabled = false;
- document.getElementById('sendBtn').disabled = false;
- document.getElementById('msgInput').focus();
+       myId = id;
+       document.getElementById('myPeerId').value = id;
+       status.textContent = '🟢 Онлайн';
+       status.className = 'status online';
+       isReady = true;
+       reconnectAttempts = 0;
+      
+       addSystemMessage(`✅ Ваш ID: ${id}`);
+       addSystemMessage(`👤 Вы вошли как: ${myName}`);
+       addSystemMessage(`💡 Отправьте ваш ID собеседнику для подключения`);
+      
+       // Активируем ввод
+      
+       document.getElementById('msgInput').disabled = false;
+       document.getElementById('sendBtn').disabled = false;
+       document.getElementById('msgInput').focus();
  });
  // Обработка входящих подключений
  peer.on('connection', (conn) => {
- handleIncomingConnection(conn);
+     handleIncomingConnection(conn);
  });
  // Ошибки
  peer.on('error', (err) => {
@@ -317,16 +316,14 @@
 
  // Не критичные ошибки (например, "ID занят")
  if (err.type === 'unavailable-id') {
- // Переподключаемся
-с новым ID
- peer.destroy();
- setTimeout(() => initPeer(), 1000);
- return;
+   // Переподключаемся с новым ID
+    peer.destroy();
+    setTimeout(() => initPeer(), 1000);
+    return;
  }
 
- if (err.type === 'peer-unavailable') {
- addSystemMessage(`❌ Пользователь не в сети`);
- return;
+ if (err.type === 'peer-unavailable') {addSystemMessage(`❌ Пользователь не в сети`);
+     return;
  }
  status.textContent = '❌ Ошибка';
  status.className = 'status error';
@@ -335,12 +332,12 @@
 
  // Пытаемся переподключиться
  if (reconnectAttempts < 3) {
- reconnectAttempts++;
- setTimeout(() => {
- addSystemMessage(`🔄 Попытка переподключения (${reconnectAttempts}/3)...`);
- peer.destroy();
- setTimeout(() => initPeer(), 2000);
- }, 3000);
+   reconnectAttempts++;
+   setTimeout(() => {
+     addSystemMessage(`🔄 Попытка переподключения (${reconnectAttempts}/3)...`);
+     peer.destroy();
+     setTimeout(() => initPeer(), 2000);
+   }, 3000);
  }
  });
  // При закрытии соединения
@@ -352,12 +349,12 @@
 
  // Автоматическое переподключение
  if (reconnectAttempts < 3) {
- reconnectAttempts++;
- setTimeout(() => {
- addSystemMessage(`🔄 Переподключение (${reconnectAttempts}/3)...`);
- peer.destroy();
- setTimeout(() => initPeer(), 2000);
- }, 3000);
+   reconnectAttempts++;
+   setTimeout(() => {
+     addSystemMessage(`🔄 Переподключение (${reconnectAttempts}/3)...`);
+     peer.destroy();
+     setTimeout(() => initPeer(), 2000);
+   }, 3000);
  }
 
  });
@@ -367,54 +364,46 @@
  }
  // --- Обработка входящего подключения ---
  function handleIncomingConnection(conn) {
- const peerId = conn.peer;
+    const peerId = conn.peer;
 
- if (connections[peerId]) {
- addSystemMessage(`ℹ Уже подключенык ${peerId}`);
- return;
- }
- addSystemMessage(`📞 Входящее подключение от ${peerId}...`);
+    if (connections[peerId]) {addSystemMessage(`ℹ Уже подключенык ${peerId}`);
+       return;
+    }
+      addSystemMessage(`📞 Входящее подключение от ${peerId}...`);
+      connections[peerId] = conn;
+      updateUserList();
+     // Настройка обработчиков
+     setupConnectionHandlers(conn, peerId);
 
- connections[peerId] = conn;
- updateUserList();
- // Настройка обработчиков
- setupConnectionHandlers(conn, peerId);
+     // Отправляем приветствие
+     conn.on('open', () => {
+     conn.send({
+     type: 'system',
+     text: `${myName} присоединилсяк чату`,
+     user: myName
 
- // Отправляем приветствие
- conn.on('open', () => {
- conn.send({
- type: 'system',
- text: `${myName} присоединилсяк чату`,
- user: myName
-
- });
- addSystemMessage(`✅ ${peerId} подключился`);
- });
+    });
+      addSystemMessage(`✅ ${peerId} подключился`);
+   });
  }
  // --- Подключение к другому пользователю ---
  function connectToPeer() {
  const targetId = document.getElementById('targetPeerId').value.trim();
- if (!targetId) {
- addSystemMessage('⚠ Введите ID собеседника');
+ if (!targetId) {addSystemMessage('⚠ Введите ID собеседника');
  return;
  }
- if (targetId === myId) {
- addSystemMessage('⚠ Нельзя подключиться к самому себе');
- return;
+ if (targetId === myId) {addSystemMessage('⚠ Нельзя подключиться к самому себе');
+   return;
  }
- if (connections[targetId]) {
- addSystemMessage(`ℹ Уже подключены к ${targetId}`);
- return;
+ if (connections[targetId]) {addSystemMessage(`ℹ Уже подключены к ${targetId}`);
+   return;
  }
- if (!isReady) {
- addSystemMessage('⏳ Подождите инициализации...');
- return;
+ if (!isReady) {addSystemMessage('⏳ Подождите инициализации...');
+    return;
  }
- addSystemMessage(`🔗 Подключение к ${targetId}...`);
-
+  addSystemMessage(`🔗 Подключение к ${targetId}...`);
  const conn = peer.connect(targetId, {
- reliable: true
-
+     reliable: true
  });
  // Настройка обработчиков
  setupConnectionHandlers(conn, targetId);
@@ -426,58 +415,55 @@
  updateUserList();
 
  conn.send({
- type: 'system',
- text: `${myName} присоединился к чату`,
- user: myName
- });
+     type: 'system',
+     text: `${myName} присоединился к чату`,
+     user: myName
+   });
  });
  conn.on('error', (err) => {
- addSystemMessage(`❌ Ошибка подключения: ${err.message}`);
- delete connections[targetId];
- updateUserList();
- });
+       addSystemMessage(`❌ Ошибка подключения: ${err.message}`);
+       delete connections[targetId];
+       updateUserList();
+    });
  }
  // --- Настройка обработчиков для соединения ---
  function setupConnectionHandlers(conn, peerId) {
- // Обработка входящих данных
- conn.on('data', (data) => {
- handleMessage(data, peerId);
+   // Обработка входящих данных
+   conn.on('data', (data) => {
+   handleMessage(data, peerId);
 
  });
  // Закрытие соединения
  conn.on('close', () => {
- delete connections[peerId];
- addSystemMessage(`🔴 ${peerId} отключился`);
- updateUserList();
+   delete connections[peerId];
+   addSystemMessage(`🔴 ${peerId} отключился`);
+   updateUserList();
  });
  // Ошибки
  conn.on('error', (err) => {
- console.error('Ошибка соединения:', err);
- delete connections[peerId];
- updateUserList();
- addSystemMessage(`❌ Ошибка с ${peerId}: ${err.message}`);
- });
+     console.error('Ошибка соединения:', err);
+     delete connections[peerId];
+     updateUserList();
+     addSystemMessage(`❌ Ошибка с ${peerId}: ${err.message}`);
+   });
  }
  // --- Обработка сообщений ---
  function handleMessage(data, fromPeer) {
- console.log('📩 Получено от', fromPeer, ':', data);
+     console.log('📩 Получено от', fromPeer, ':', data);
 
- if (data.type === 'system') {
- addSystemMessage(data.text);
- return;
- }
- if (data.type === 'message') {
- addMessage(data.user || 'Аноним', data.text, false);
- return;
-
- }
- if (data.type === 'ping') {
- // Ответ на ping
- if (connections[fromPeer]) {
- connections[fromPeer].send({ type: 'pong' });
- }
- return;
- }
+     if (data.type === 'system') {addSystemMessage(data.text);
+         return;
+     }
+     if (data.type === 'message') {addMessage(data.user || 'Аноним', data.text, false);
+         return;
+     }
+     if (data.type === 'ping') {
+     // Ответ на ping
+     if (connections[fromPeer]) {
+         connections[fromPeer].send({ type: 'pong' });
+      }
+        return;
+      }
  }
  // --- Отправка сообщения ---
  function sendMessage() {
@@ -485,138 +471,132 @@
  const text = input.value.trim();
  if (!text) return;
  // Показываем у себя
- addMessage(myName, text, true);
+   addMessage(myName, text, true);
  // Отправляем всем
- const msgData = {
- type: 'message',
- user: myName,
- text: text
+   const msgData = {
+   type: 'message',
+   user: myName,
+   text: text
  };
  let sentCount = 0;
  for (let id in connections) {
- try {
- connections[id].send(msgData);
-
- sentCount++;
- } catch (e) {
- console.warn('Не удалось отправить:', e);
- delete connections[id];
- updateUserList();
+   try {connections[id].send(msgData);
+   sentCount++;
+   } catch (e) {
+     console.warn('Не удалось отправить:', e);
+     delete connections[id];
+     updateUserList();
+   }
  }
- }
- if (sentCount === 0) {
- addSystemMessage('⚠ Нет активных подключений');
- }
- input.value = '';
- input.focus();
- }
+ if (sentCount === 0) {addSystemMessage('⚠ Нет активных подключений');  }
+     input.value = '';
+     input.focus();
+   }
  // --- UI: Добавить сообщение ---
  function addMessage(user, text, isOwn = false) {
- const container = document.getElementById('messagesContainer');
- const div = document.createElement('div');
- div.className = 'msg';
- div.innerHTML = `
- <span class="user ${isOwn ? 'me' : ''}">${user}</span>
- <span class="text">${text}</span>
- <span class="time">${new Date().toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'})}</span>
- `;
- container.appendChild(div);
- container.scrollTop = container.scrollHeight;
+     const container = document.getElementById('messagesContainer');
+     const div = document.createElement('div');
+     div.className = 'msg';
+     div.innerHTML = `
+     <span class="user ${isOwn ? 'me' : ''}">${user}</span>
+     <span class="text">${text}</span>
+     <span class="time">${new Date().toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'})}</span>
+     `;
+     container.appendChild(div);
+     container.scrollTop = container.scrollHeight;
  }
 
  function addSystemMessage(text) {
- const container = document.getElementById('messagesContainer');
- const div = document.createElement('div');
- div.className = 'msg';
- div.style.background = '#0a1418';
- div.style.borderColor = '#1a2f2a';
- div.innerHTML = `
- <span class="user" style="color:#6a8f7a;">⚡ Система</span>
- <span class="text" style="color:#8fb0a0; font-style:italic;">${text}</span>
- <span class="time">${new Date().toLocaleTimeString('ru-RU', {hour:'2-digit',
-minute:'2-digit'})}</span>
- `;
- container.appendChild(div);
- container.scrollTop = container.scrollHeight;
+     const container = document.getElementById('messagesContainer');
+     const div = document.createElement('div');
+     div.className = 'msg';
+     div.style.background = '#0a1418';
+     div.style.borderColor = '#1a2f2a';
+     div.innerHTML = `
+       <span class="user" style="color:#6a8f7a;">⚡ Система</span>
+       <span class="text" style="color:#8fb0a0; font-style:italic;">${text}</span>
+       <span class="time">${new Date().toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'})}</span>
+     `;
+     container.appendChild(div);
+     container.scrollTop = container.scrollHeight;
  }
  // --- UI: Список пользователей ---
  function updateUserList() {
- const container = document.getElementById('userList');
- container.innerHTML = `<span class="user-tag online">🟢 Вы (${myName})</
-span>`;
-
- const ids = Object.keys(connections);
- if (ids.length === 0) {
- const empty = document.createElement('span');
- empty.className = 'user-tag of
-fline';
- empty.textContent = '🔴 Нет подключений';
- container.appendChild(empty);
+     const container = document.getElementById('userList');
+     container.innerHTML = `<span class="user-tag online">🟢 Вы (${myName})</
+    span>`;
+    
+     const ids = Object.keys(connections);
+     if (ids.length === 0) {
+     const empty = document.createElement('span');
+     empty.className = 'user-tag of
+    fline';
+     empty.textContent = '🔴 Нет подключений';
+     container.appendChild(empty);
  }
 
 
- ids.forEach(id => {
- const tag = document.createElement('span');
- tag.className = 'user-tag online';
- // Пытаемся получить имя из данных
- let name = id.slice(0, 8);
- if (connections[id] && connections[id]._data) {
- // Не можем получить имя, используем ID
- }
- tag.textContent = `🟢 ${name}`;
- tag.title = id;
- container.appendChild(tag);
- });
+   ids.forEach(id => {
+   const tag = document.createElement('span');
+     tag.className = 'user-tag online';
+     // Пытаемся получить имя из данных
+     let name = id.slice(0, 8);
+  if (connections[id] && connections[id]._data) {
+     // Не можем получить имя, используем ID
+  }
+     tag.textContent = `🟢 ${name}`;
+     tag.title = id;
+     container.appendChild(tag);
+   });
  }
  // --- Копировать ID ---
  function copyPeerId() {
- const input = document.getElementById('myPeerId');
- input.select();
- try {
- document.execCommand('copy');
- addSystemMessage('📋 ID скопированв буфер обмена');
+     const input = document.getElementById('myPeerId');
+     input.select();
+     try {
+     document.execCommand('copy');
+     addSystemMessage('📋 ID скопированв буфер обмена');
  } catch {
  // Fallback
- navigator.clipboard.writeText(input.value).then(() => {
- addSystemMessage('📋 ID скопирован в буфер обмена');
- }).catch(() => {
- addSystemMessage('⚠ Не удалось скопировать, скопируйте вручную');
- });
+     navigator.clipboard.writeText(input.value).then(() => {
+     addSystemMessage('📋 ID скопирован в буфер обмена');
+     }).catch(() => {
+     addSystemMessage('⚠ Не удалось скопировать, скопируйте вручную');
+   });
  }
 
  }
  // --- Сброс соединения ---
  function resetConnection() {
- if (confirm('Перезапустить соединение?')) {
- for (let id in connections) {
- try { connections[id].close(); } catch(e) {}
- }
- connections = {};
- peer.destroy();
- updateUserList();
- addSystemMessage('🔄 Перезапуск...');
- setTimeout(() => initPeer(), 1500);
- }
+    if (confirm('Перезапустить соединение?')) {
+    for (let id in connections) {
+         try { connections[id].close(); } catch(e) {}
+    }
+     connections = {};
+     peer.destroy();
+     updateUserList();
+     addSystemMessage('🔄 Перезапуск...');
+     setTimeout(() => initPeer(), 1500);
+     }
  }
  // --- Проверка соединения (ping) ---
  function pingPeers() {
- for (let id in connections) {
- try {
- connections[id].send({ type: 'ping' });
- } catch(e) {
- delete connections[id];
- updateUserList();
- }
- }
+     for (let id in connections) {
+         try {
+             connections[id].send({ type: 'ping' });
+      } catch(e) {
+         delete connections[id];
+         updateUserList();
+      }
+    }
  }
  // --- Enter ---
- document.getElementById('msgInput').addEventListener('keydown', (e) => {
-
- if (e.key === 'Enter') sendMessage();
- });
- document.getElementById('targetPeerId').addEventListener('keydown', (e) => {
- if (e.key === 'Enter') connectToPeer();
- });
+document.getElementById('msgInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') sendMessage();
+});
+document.getElementById('targetPeerId').addEventListener('keydown', (e) => {
+   if (e.key === 'Enter') connectToPeer();
+});
  // --- ЗАПУСК ---
  initPeer();
  // Пинг каждые 30 секунд (проверка соединения)
