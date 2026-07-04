@@ -315,50 +315,50 @@
  });
  // Ошибки
  peer.on('error', (err) => {
-    console.error('Ошибка Peer:', err);
+   console.error('Ошибка Peer:', err);
 
- // Не критичные ошибки (например, "ID занят")
- if (err.type === 'unavailable-id') {
-   // Переподключаемся с новым ID
-    peer.destroy();
-    setTimeout(() => initPeer(), 1000);
-    return;
- }
-
- if (err.type === 'peer-unavailable') {addSystemMessage(`❌ Пользователь не в сети`);
-     return;
- }
- status.textContent = '❌ Ошибка';
- status.className = 'status error';
- addSystemMessage(`❌ Ошибка: ${err.message || err}`);
-
-
- // Пытаемся переподключиться
- if (reconnectAttempts < 3) {
-   reconnectAttempts++;
-   setTimeout(() => {
-     addSystemMessage(`🔄 Попытка переподключения (${reconnectAttempts}/3)...`);
-     peer.destroy();
-     setTimeout(() => initPeer(), 2000);
-   }, 3000);
- }
+     // Не критичные ошибки (например, "ID занят")
+     if (err.type === 'unavailable-id') {
+       // Переподключаемся с новым ID
+        peer.destroy();
+        setTimeout(() => initPeer(), 1000);
+        return;
+     }
+    
+     if (err.type === 'peer-unavailable') {addSystemMessage(`❌ Пользователь не в сети`);
+         return;
+     }
+     status.textContent = '❌ Ошибка';
+     status.className = 'status error';
+     addSystemMessage(`❌ Ошибка: ${err.message || err}`);
+    
+    
+     // Пытаемся переподключиться
+     if (reconnectAttempts < 3) {
+       reconnectAttempts++;
+       setTimeout(() => {
+         addSystemMessage(`🔄 Попытка переподключения (${reconnectAttempts}/3)...`);
+         peer.destroy();
+         setTimeout(() => initPeer(), 2000);
+       }, 3000);
+     }
  });
  // При закрытии соединения
  peer.on('close', () => {
- isReady = false;
- status.textContent = '🔴 Отключён';
- status.className = 'status';
- addSystemMessage('🔴 Соединение разорвано');
+   isReady = false;
+   status.textContent = '🔴 Отключён';
+   status.className = 'status';
+   addSystemMessage('🔴 Соединение разорвано');
 
- // Автоматическое переподключение
- if (reconnectAttempts < 3) {
-   reconnectAttempts++;
-   setTimeout(() => {
-     addSystemMessage(`🔄 Переподключение (${reconnectAttempts}/3)...`);
-     peer.destroy();
-     setTimeout(() => initPeer(), 2000);
-   }, 3000);
- }
+   // Автоматическое переподключение
+   if (reconnectAttempts < 3) {
+     reconnectAttempts++;
+     setTimeout(() => {
+       addSystemMessage(`🔄 Переподключение (${reconnectAttempts}/3)...`);
+       peer.destroy();
+       setTimeout(() => initPeer(), 2000);
+     }, 3000);
+   }
 
  });
  // Сохраняем в глобальный доступ
@@ -404,7 +404,7 @@
  if (!isReady) {addSystemMessage('⏳ Подождите инициализации...');
     return;
  }
-  addSystemMessage(`🔗 Подключение к ${targetId}...`);
+ addSystemMessage(`🔗 Подключение к ${targetId}...`);
    const conn = peer.connect(targetId, {
      reliable: true
  });
@@ -537,7 +537,7 @@
  }
 
 
-   ids.forEach(id => {
+ids.forEach(id => {
    const tag = document.createElement('span');
      tag.className = 'user-tag online';
      // Пытаемся получить имя из данных
