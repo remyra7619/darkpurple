@@ -315,7 +315,7 @@
  });
  // Ошибки
  peer.on('error', (err) => {
- console.error('Ошибка Peer:', err);
+    console.error('Ошибка Peer:', err);
 
  // Не критичные ошибки (например, "ID занят")
  if (err.type === 'unavailable-id') {
