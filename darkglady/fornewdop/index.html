@@ -470,30 +470,30 @@
  }
  // --- Отправка сообщения ---
  function sendMessage() {
- const input = document.getElementById('msgInput');
- const text = input.value.trim();
- if (!text) return;
- // Показываем у себя
-   addMessage(myName, text, true);
- // Отправляем всем
-   const msgData = {
-   type: 'message',
-   user: myName,
-   text: text
- };
- let sentCount = 0;
- for (let id in connections) {
-   try {connections[id].send(msgData);
-   sentCount++;
-   } catch (e) {
-     console.warn('Не удалось отправить:', e);
-     delete connections[id];
-     updateUserList();
-   }
- }
- if (sentCount === 0) {addSystemMessage('⚠ Нет активных подключений');  }
-     input.value = '';
-     input.focus();
+     const input = document.getElementById('msgInput');
+     const text = input.value.trim();
+     if (!text) return;
+     // Показываем у себя
+       addMessage(myName, text, true);
+     // Отправляем всем
+       const msgData = {
+       type: 'message',
+       user: myName,
+       text: text
+     };
+     let sentCount = 0;
+     for (let id in connections) {
+       try {connections[id].send(msgData);
+       sentCount++;
+       } catch (e) {
+         console.warn('Не удалось отправить:', e);
+         delete connections[id];
+         updateUserList();
+       }
+     }
+     if (sentCount === 0) {addSystemMessage('⚠ Нет активных подключений');  }
+         input.value = '';
+         input.focus();
    }
  // --- UI: Добавить сообщение ---
  function addMessage(user, text, isOwn = false) {
@@ -531,9 +531,9 @@
      const ids = Object.keys(connections);
      if (ids.length === 0) {
          const empty = document.createElement('span');
-         empty.className = 'user-tag offline';
-         empty.textContent = '🔴 Нет подключений';
-         container.appendChild(empty);
+           empty.className = 'user-tag offline';
+           empty.textContent = '🔴 Нет подключений';
+           container.appendChild(empty);
  }
 
 
