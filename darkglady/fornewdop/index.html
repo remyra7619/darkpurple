@@ -222,7 +222,7 @@
           <span style="color:#6a8f7a;">🆔 Твой ID:</span>
           <input type="text" id="myPeerId" readonly style="flex:1; background:#0b141c; border:1px solid #1f3f3a; border-radius:40px; padding:10px 18px; color:#b3ffd9; fontfamily:inherit; outline:none;" placeholder="Загрузка..." />
           <button class="btn" onclick="copyPeerId()">📋 Копировать</button>
-          <button class="btn btn-danger" onclick="resetConnection()"title="Перезапустить соединение">🔄 </button>
+          <button class="btn btn-danger" onclick="resetConnection()" title="Перезапустить соединение">🔄</button>
      </div>
  <div>
        <span style="color:#6a8f7a; font-size:14px;">🔗 Подключиться к собеседнику:</span>
@@ -267,6 +267,9 @@
    // ПРАВИЛЬНЫЕ НАСТРОЙКИ PEER.JS
    peer = new Peer(undefined, {
            debug: 2,
+           host: '0.peerjs.com',
+           port: 443,
+           secure: true,
            config: {
                  iceServers: [
                      { urls: 'stun:stun.l.google.com:19302' },
@@ -390,7 +393,7 @@
  function connectToPeer() {
  const targetId = document.getElementById('targetPeerId').value.trim();
  if (!targetId) {addSystemMessage('⚠ Введите ID собеседника');
- return;
+  return;
  }
  if (targetId === myId) {addSystemMessage('⚠ Нельзя подключиться к самому себе');
    return;
@@ -402,7 +405,7 @@
     return;
  }
   addSystemMessage(`🔗 Подключение к ${targetId}...`);
- const conn = peer.connect(targetId, {
+   const conn = peer.connect(targetId, {
      reliable: true
  });
  // Настройка обработчиков
@@ -410,11 +413,11 @@
 
  // Если подключение установлено
  conn.on('open', () => {
- addSystemMessage(`✅ Подключено к ${targetId}`);
- connections[targetId] = conn;
- updateUserList();
+   addSystemMessage(`✅ Подключено к ${targetId}`);
+   connections[targetId] = conn;
+   updateUserList();
 
- conn.send({
+   conn.send({
      type: 'system',
      text: `${myName} присоединился к чату`,
      user: myName
@@ -523,16 +526,14 @@
  // --- UI: Список пользователей ---
  function updateUserList() {
      const container = document.getElementById('userList');
-     container.innerHTML = `<span class="user-tag online">🟢 Вы (${myName})</
-    span>`;
+     container.innerHTML = `<span class="user-tag online">🟢 Вы (${myName})</span>`;
     
      const ids = Object.keys(connections);
      if (ids.length === 0) {
-     const empty = document.createElement('span');
-     empty.className = 'user-tag of
-    fline';
-     empty.textContent = '🔴 Нет подключений';
-     container.appendChild(empty);
+         const empty = document.createElement('span');
+         empty.className = 'user-tag offline';
+         empty.textContent = '🔴 Нет подключений';
+         container.appendChild(empty);
  }
 
 
@@ -552,16 +553,14 @@
  // --- Копировать ID ---
  function copyPeerId() {
      const input = document.getElementById('myPeerId');
-     input.select();
+        input.select();
      try {
-     document.execCommand('copy');
-     addSystemMessage('📋 ID скопированв буфер обмена');
+         document.execCommand('copy'); addSystemMessage('📋 ID скопированв буфер обмена');
  } catch {
  // Fallback
      navigator.clipboard.writeText(input.value).then(() => {
      addSystemMessage('📋 ID скопирован в буфер обмена');
-     }).catch(() => {
-     addSystemMessage('⚠ Не удалось скопировать, скопируйте вручную');
+     }).catch(() => {addSystemMessage('⚠ Не удалось скопировать, скопируйте вручную');
    });
  }
 
