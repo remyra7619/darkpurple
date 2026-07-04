@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="img/i.ico" type="image/x-icon">
+    <title>⚡ GLADY · Система Хаба</title>
+</head>
+<body>
+
+    <div class="hub" id="app">
+
+        <!-- Верхняя панель -->
+        <div class="top-panel">
+            <div class="user-block">
+                <div class="avatar" id="avatarEmoji" title="Двойной клик — сменить аватар">🦊</div>
+                <div class="user-info">
+                    <div class="name" id="userName">PRIZRAK</div>
+                    <div class="sub">Уровень <span id="userLevel">1</span> · Ранг <span id="userRank">новичек</span></div>
+                </div>
+            </div>
+            <div class="badge-status" id="statusBadge">🟢 Онлайн</div>
+        </div>
+
+        <!-- НАВИГАЦИЯ (подсайты) -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-page="main">🏠 Главная</button>
+            <button class="nav-tab" data-page="mods">📦 Моды</button>
+            <button class="nav-tab" data-page="news">📰 Новости</button>
+            <button class="nav-tab" data-page="profile">👤 Профиль</button>
+        </div>
+
+        <!-- ======== СТРАНИЦЫ (подсайты) ======== -->
+
+        <!-- ГЛАВНАЯ -->
+        <div class="page active" id="page-main">
+            <h2 style="color:#b3ffd9; margin-bottom:12px;">⚡ Система активна</h2>
+            <p style="margin-bottom:18px; color:#a0c0b4;">Добро пожаловать, <span style="color:#2affb6;" id="greetName">Гипсик</span>! Тут центр управления.</p>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>📊 Статистика</h3>
+                    <p>Загрузок модов: <span id="statDownloads">127</span></p>
+                    <p>Активность: <span id="statActivity">92%</span></p>
+                    <button class="btn btn-sm" id="refreshStatsBtn">⟳ Обновить</button>
+                </div>
+                <div class="card">
+                    <h3>📌 Быстрые ссылки</h3>
+                    <p>🔹 <a href="fornewdop/index.html" style="color:#7fffd4;" id="quickLink1">переместится в чат</a></p>
+                    <p>🔹 <a href="fornewdop/shop.html" style="color:#7fffd4;" id="quickLink2">Получить донат</a></p>
+                    <p>🔹 <a href="fornewdop/chatfornew.html" style="color:#7fffd4;" id="quickLink3">Свежие новости</a></p>
+                </div>
+            </div>
+            <!-- мини-лог на главной -->
+            <div class="log-box" id="mainLog">
+                <div class="log-item"><span class="log-time">[система]</span> Хаб инициализирован. Данные загружены.</div>
+            </div>
+        </div>
+
+        <!-- МОДЫ -->
+        <div class="page" id="page-mods">
+            <h2 style="color:#b3ffd9;">📦 Библиотека модов</h2>
+            <p style="margin-bottom:16px; color:#8fb0a0;">Устанавливай, скачивай, управляй.</p>
+            <div class="grid-2" id="modsContainer">
+                <!-- карточки заполнятся из JS -->
+            </div>
+            <button class="btn" id="addModBtn">➕ Добавить мод</button>
+        </div>
+        <!-- НОВОСТИ -->
+        <div class="page" id="page-news">
+            <h2 style="color:#b3ffd9;">📰 Новостная лента</h2>
+            <div id="newsContainer">
+                <div class="card"><h3>🔹 сервер открывается</h3><p>переработан саит сервер и моды </p></div>
+                <div class="card"><h3>🔹 Скидки на донат</h3><p>До конца недели все пожертвования удваиваются!</p></div>
+                <div class="card"><h3>🔹 remyra в топе</h3><p>Наш проект вошёл в топ-10 по модам.</p></div>
+            </div>
+            <button class="btn btn-sm" id="addNewsBtn">➕ Добавить новость</button>
+        </div>
+
+        <!-- ПРОФИЛЬ -->
+        <div class="page" id="page-profile">
+            <h2 style="color:#b3ffd9;">👤 Профиль</h2><div style="display:flex; flex-wrap:wrap; gap:30px; margin:18px 0;">
+                <div>
+                    <p><strong>Имя:</strong> <span id="profileName">PRIZRAK</span></p>
+                    <p><strong>Уровень:</strong> <span id="profileLevel">1</span></p>
+                    <p><strong>Ранг:</strong> <span id="profileRank">новичек</span></p>
+                    <p><strong>Всего действий:</strong> <span id="profileActions">1</span></p>
+                </div>
+                <div>
+                    <p><strong>Дата регистрации:</strong> <span id="profileDate">2026-01-15</span></p>
+                    <p><strong>Модов установлено:</strong> <span id="profileModsCount">8</span></p>
+                    <button class="btn btn-sm" id="changeNameBtn">✏️ Сменить имя</button>
+                    <button class="btn btn-sm" id="resetProfileBtn" style="border-color:#ff6b6b; color:#ff8a8a;">🔄 Сброс</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ОБЩИЙ ЛОГ ДЕЙСТВИЙ (сохраняется) ===== -->
+        <div style="margin-top:28px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="color:#6a8f7a; font-size:14px;">📋 Журнал действий (сохраняется)</span>
+                <button class="btn btn-sm" id="clearLogBtn" style="border-color:#4a6a5a;">Очистить</button>
+            </div>
+            <div class="log-box" id="globalLog">
+                <!-- заполняется из localStorage -->
+            </div>
+        </div>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>

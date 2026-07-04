@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>⚡ GLADY · Система Чата</title>
+    <style>
+        /* ----- GLOBAL ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #080c16;
+            font-family: 'Segoe UI', 'Courier New', monospace;
+            color: #d0ece4;
+            padding: 16px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* ----- ОКНО СИСТЕМЫ ЧАТА ----- */
+        .chat-system {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(8, 16, 28, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid #2affb6;
+            border-radius: 32px;
+            padding: 24px 26px;
+            box-shadow: 0 0 50px rgba(42, 255, 182, 0.12);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            height: 92vh;
+            max-height: 820px;
+        }
+
+        /* ----- HEADER ----- */
+        .chat-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1f3f3a;
+            padding-bottom: 14px;
+            margin-bottom: 16px;
+        }
+
+        .chat-title {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2affb6, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+        }
+
+        .chat-status {
+            font-size: 13px;
+            color: #7fa89a;
+            border: 1px solid #2a5a4a;
+            padding: 4px 16px;
+            border-radius: 40px;
+            background: #0f1e1e;
+        }
+        .chat-status.online {
+            border-color: #2affb6;
+            color: #b0ffe0;
+        }
+
+        .user-mini {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .user-mini .avatar-small {
+            font-size: 28px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .user-mini .avatar-small:hover {
+            transform: scale(1.1);
+        }
+        .user-mini .name-small {
+            font-weight: 600;
+            color: #b3ffd9;
+        }
+
+        /* ----- ОСНОВНАЯ СЕТКА: комнаты + сообщения ----- */
+        .chat-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 20px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* ----- КОМНАТЫ (слева) ----- */
+        .rooms-panel {
+            background: #0b141c;
+            border-radius: 20px;
+            padding: 14px 12px;
+            border: 1px solid #1a2f2a;
+            overflow-y: auto;
+        }
+        .rooms-panel h4 {
+            color: #6a8f7a;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .room-item {
+            padding: 10px 14px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid transparent;
+        }
+        .room-item:hover {
+            background: #142a2a;
+            border-color: #1f3f3a;
+        }
+        .room-item.active {
+            background: #1a2f2a;
+            border-color: #2affb6;
+            box-shadow: 0 0 20px rgba(42, 255, 182, 0.1);
+        }
+        .room-item .room-name {
+            font-weight: 500;
+            color: #c0e0d4;
+        }
+        .room-item .room-badge {
+            background: #2affb6;
+            color: #080c16;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 0 10px;
+            border-radius: 40px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .room-actions {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn-room {
+            background: transparent;
+            border: 1px solid #1f3f3a;
+            color: #8fb0a0;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .btn-room:hover {
+            border-color: #2affb6;
+            color: #b3ffd9;
+            background: #142a2a;
+        }
+
+        /* ----- ОБЛАСТЬ СООБЩЕНИЙ (центр) ----- */
+        .messages-area {
+            display: flex;
+            flex-direction: column;
+            background: #0a121c;
+            border-radius: 20px;
+            border: 1px solid #1a2f2a;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .messages-header {
+            padding: 12px 18px;
+            border-bottom: 1px solid #1a2f2a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0d1820;
+        }
+        .messages-header .room-title {
+            font-weight: 600;
+            color: #b3ffd9;
+        }
+        .messages-header .room-members {
+            font-size: 13px;
+            color: #6a8f7a;
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* ----- СООБЩЕНИЯ ----- */
+        .msg {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            animation: fadeMsg 0.25s ease;
+        }
+        @keyframes fadeMsg {
+            0% {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .msg .msg-avatar {
+            font-size: 26px;
+            min-width: 36px;
+            text-align: center;
+            user-select: none;
+        }
+        .msg .msg-body {
+            flex: 1;
+            background: #0f1e24;
+            padding: 8px 16px;
+            border-radius: 16px;
+            border: 1px solid #1a2f2a;
+            word-break: break-word;
+        }
+        .msg .msg-body .msg-user {
+            font-weight: 600;
+            color: #b3ffd9;
+            font-size: 14px;
+        }
+        .msg .msg-body .msg-user.me {
+            color: #7fffd4;
+        }
+        .msg .msg-body .msg-text {
+            margin-top: 2px;
+            color: #d0ece4;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        .msg .msg-body .msg-time {
+            font-size: 11px;
+            color: #4a7a6a;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .msg.own {
+            flex-direction: row-reverse;
+        }
+        .msg.own .msg-body {
+            background: #142a2a;
+            border-color: #2affb670;
+        }
+
+        /* ----- ВВОД СООБЩЕНИЯ ----- */
+        .input-area {
+            display: flex;
+            gap: 12px;
+            padding: 12px 18px;
+            border-top: 1px solid #1a2f2a;
+            background: #0d1820;
+        }
+        .input-area input {
+            flex: 1;
+            background: #0b141c;
+            border: 1px solid #1f3f3a;
+            border-radius: 60px;
+            padding: 12px 20px;
+            color: #d0ece4;
+            font-family: inherit;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .input-area input:focus {
+            border-color: #2affb6;
+            box-shadow: 0 0 20px rgba(42, 255, 182, 0.1);
+        }
+        .input-area input::placeholder {
+            color: #4a6a5a;
+        }
+        .input-area .btn-send {
+            background: transparent;border: 1px solid #2affb6;
+            color: #b0ffe0;
+            padding: 0 28px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.25s;
+            font-family: inherit;
+            background: rgba(20, 40, 40, 0.2);
+        }
+        .input-area .btn-send:hover {
+            background: #2affb6;
+            color: #080c16;
+            box-shadow: 0 0 30px #2affb6;
+        }
+
+        /* ----- ПРИВАТНЫЕ СООБЩЕНИЯ (справа) ----- */
+        .private-panel {
+            display: none;
+            background: #0b141c;
+            border-radius: 20px;
+            border: 1px solid #1a2f2a;
+            padding: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 12px;
+        }
+        .private-panel.active {
+            display: block;
+        }
+        .private-panel h4 {
+            color: #6a8f7a;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .private-item {
+            padding: 8px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid transparent;
+            margin-bottom: 4px;
+        }
+        .private-item:hover {
+            background: #142a2a;
+            border-color: #1f3f3a;
+        }
+        .private-item .p-name {
+            color: #c0e0d4;
+        }
+        .private-item .p-badge {
+            background: #ff6b6b;
+            color: #080c16;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 0 10px;
+            border-radius: 40px;
+        }
+
+        /* ----- АДАПТИВ ----- */
+        max-width: 700px {
+            .chat-grid {
+                grid-template-columns: 1fr;
+            }
+            .rooms-panel {
+                max-height: 160px;
+            }
+            .chat-system {
+                height: 96vh;
+                padding: 16px;
+            }
+        }
+
+        /* скролл */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b141c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2affb6;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-system" id="chatApp">
+
+        <!-- HEADER -->
+        <div class="chat-header">
+            <div class="chat-title">⚡ CHAT · SYSTEM</div>
+            <div class="user-mini">
+                <span class="avatar-small" id="chatAvatar" title="Двойной клик — сменить аватар">🦊</span>
+                <span class="name-small" id="chatUserName">Гипсик</span>
+                <span class="chat-status online" id="chatStatus">🟢 Онлайн</span>
+            </div>
+        </div>
+
+        <!-- ОСНОВНАЯ СЕТКА -->
+        <div class="chat-grid">
+
+            <!-- КОМНАТЫ -->
+            <div class="rooms-panel" id="roomsPanel">
+                <h4>📁 Комнаты</h4>
+                <div id="roomsList">
+                    <!-- рендер из JS -->
+                </div>
+                <div class="room-actions">
+                    <button class="btn-room" id="addRoomBtn">➕ Создать</button>
+                    <button class="btn-room" id="deleteRoomBtn">🗑 Удалить</button>
+                </div>
+                <div style="margin-top:14px; border-top:1px solid #1a2f2a; padding-top:12px;">
+                    <h4>💬 Приватные</h4>
+                    <div id="privateList">
+                        <!-- рендер из JS -->
+                    </div>
+                    <button class="btn-room" id="addPrivateBtn" style="margin-top:6px;">➕ Написать</button>
+                </div>
+            </div>
+
+            <!-- СООБЩЕНИЯ -->
+            <div class="messages-area">
+                <div class="messages-header">
+                    <span class="room-title" id="currentRoomTitle"># Общий</span>
+                    <span class="room-members" id="roomMembers">👥 4</span>
+                </div>
+
+                <div class="messages-container" id="messagesContainer">
+                    <!-- сообщения рендерятся из JS -->
+                </div>
+
+                <div class="input-area">
+                    <input type="text" id="msgInput" placeholder="Введите сообщение..." />
+                    <button class="btn-send" id="sendBtn">➤</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- скрытый блок для приватных чатов (отображается внутри комнат) -->
+        <div class="private-panel" id="privateChatPanel">
+            <h4>💬 Приват с <span id="privateTargetName">—</span></h4>
+            <div id="privateMessagesContainer" style="max-height:180px; overflow-y:auto; margin:8px 0;">
+                <!-- приватные сообщения -->
+            </div>
+            <div style="display:flex; gap:8px;">
+                <input type="text" id="privateMsgInput" placeholder="Приватное сообщение..." style="flex:1; background:#0b141c; border:1px solid #1f3f3a; border-radius:60px; padding:8px 16px; color:#d0ece4; font-family:inherit; outline:none;" />
+                <button class="btn-room" id="privateSendBtn">➤</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        (function() {
+            // ---------- ДАННЫЕ (localStorage) ----------
+            const STORAGE_KEY = 'gipsik_chat_data';
+
+            function defaultChatData() {
+                return {
+                    userName: 'Гипсик',
+                    userAvatar: '🦊',
+                    rooms: [
+                        { id: 'room1', name: 'Общий', members: ['Гипсик', 'Нейро', 'Линк', 'Тень'] },
+                        { id: 'room2', name: 'Моды', members: ['Гипсик', 'Кодер'] },
+                        { id: 'room3', name: 'Донат', members: ['Гипсик', 'Меценат'] }
+                    ],
+                    currentRoom: 'room1',
+                    messages: {
+                        room1: [
+                            { user: 'Гипсик', avatar: '🦊', text: 'Всем привет! 👋', time: '12:00' },
+                            { user: 'Нейро', avatar: '🤖', text: 'Система онлайн, Гипсик.', time: '12:01' },
+                            { user: 'Линк', avatar: '🔗', text: 'Готов к синхронизации.', time: '12:02' }
+                        ],
+                        room2: [
+                            { user: 'Гипсик', avatar: '🦊', text: 'Новый мод залил.', time: '11:30' },
+                            { user: 'Кодер', avatar: '💻', text: 'Проверю сегодня.', time: '11:32' }
+                        ],
+                        room3: [
+                            { user: 'Гипсик', avatar: '🦊', text: 'Спасибо за поддержку! ❤️', time: '10:00' },
+                            { user: 'Меценат', avatar: '⭐', text: 'Держите проект!', time: '10:05' }
+                        ]
+                    },
+                    privateChats: {
+                        // ключ — имя пользователя, значение — массив сообщений
+                        'Нейро': [
+                            { user: 'Гипсик', text: 'Привет, Нейро!', time: '11:00' },
+                            { user: 'Нейро', text: 'Привет! Чем помочь?', time: '11:02' }
+                        ]
+                    },
+                    privateList: ['Нейро', 'Линк']
+                };
+            }
+
+            let data = loadData();
+
+            function loadData() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY);
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        // слияние с дефолтом
+                        const def = defaultChatData();
+                        for (let key in def) {
+                            if (!(key in parsed)) parsed[key] = def[key];
+                        }
+                        // гарантируем, что все комнаты есть в messages
+                        parsed.rooms.forEach(room => {
+                            if (!parsed.messages[room.id]) parsed.messages[room.id] = [];
+                        });return parsed;
+                    }
+                } catch (e) { console.warn('Загрузка чата сброшена'); }
+                return defaultChatData();
+            }
+
+            function saveData() {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            }
+
+            // ---------- ВСПОМОГАТЕЛЬНЫЕ ----------
+            function getTime() {
+                return new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            function getCurrentRoomMessages() {
+                return data.messages[data.currentRoom] || [];
+            }
+
+            function setCurrentRoomMessages(msgs) {
+                data.messages[data.currentRoom] = msgs;
+            }
+
+            // ---------- РЕНДЕР ----------
+            function renderAll() {
+                renderRooms();
+                renderMessages();
+                renderPrivateList();
+                updateHeader();
+                renderPrivateChatPanel();
+            }
+
+            function renderRooms() {
+                const container = document.getElementById('roomsList');
+                container.innerHTML = '';
+                data.rooms.forEach(room => {
+                    const div = document.createElement('div');
+                    div.className = 'room-item' + (room.id === data.currentRoom ? ' active' : '');
+                    div.innerHTML = `
+                        <span class="room-name"># ${room.name}</span>
+                        <span class="room-badge">${room.members.length}</span>
+                    `;
+                    div.addEventListener('click', () => {
+                        data.currentRoom = room.id;
+                        // закрываем приватную панель
+                        document.getElementById('privateChatPanel').classList.remove('active');
+                        saveData();
+                        renderAll();
+                    });
+                    container.appendChild(div);
+                });
+            }
+
+            function renderMessages() {
+                const container = document.getElementById('messagesContainer');
+                const msgs = getCurrentRoomMessages();
+                container.innerHTML = '';
+                msgs.forEach(msg => {
+                    const isOwn = msg.user === data.userName;
+                    const div = document.createElement('div');
+                    div.className = 'msg' + (isOwn ? ' own' : '');
+                    div.innerHTML = `
+                        <div class="msg-avatar">${msg.avatar || '👤'}</div>
+                        <div class="msg-body">
+                            <span class="msg-user ${isOwn ? 'me' : ''}">${msg.user}</span>
+                            <div class="msg-text">${msg.text}</div>
+                            <span class="msg-time">${msg.time || getTime()}</span>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+                container.scrollTop = container.scrollHeight;
+            }
+
+            function renderPrivateList() {
+                const container = document.getElementById('privateList');
+                container.innerHTML = '';
+                data.privateList.forEach(name => {
+                    const div = document.createElement('div');
+                    div.className = 'private-item';
+                    const count = data.privateChats[name] ? data.privateChats[name].length : 0;
+                    div.innerHTML = `
+                        <span class="p-name">💬 ${name}</span>
+                        <span class="p-badge">${count}</span>
+                    `;
+                    div.addEventListener('click', () => {
+                        // открыть приватный чат
+                        openPrivateChat(name);
+                    });
+                    container.appendChild(div);
+                });
+            }
+
+            function renderPrivateChatPanel() {
+                // панель отображается только когда активна
+                // заполняется в openPrivateChat
+            }
+
+            function updateHeader() {
+                const room = data.rooms.find(r => r.id === data.currentRoom);
+                if (room) {
+                    document.getElementById('currentRoomTitle').textContent = '# ' + room.name;
+                    document.getElementById('roomMembers').textContent = '👥 ' + room.members.length;
+                }
+                document.getElementById('chatUserName').textContent = data.userName;
+                document.getElementById('chatAvatar').textContent = data.userAvatar;
+            }
+
+            // ---------- ПРИВАТНЫЙ ЧАТ ----------
+            let activePrivateTarget = null;
+
+            function openPrivateChat(targetName) {
+                activePrivateTarget = targetName;
+                const panel = document.getElementById('privateChatPanel');
+                panel.classList.add('active');
+                document.getElementById('privateTargetName').textContent = targetName;
+                // рендер сообщений
+                const container = document.getElementById('privateMessagesContainer');
+                const msgs = data.privateChats[targetName] || [];
+                container.innerHTML = '';
+                msgs.forEach(msg => {
+                    const isOwn = msg.user === data.userName;
+                    const div = document.createElement('div');
+                    div.className = 'msg' + (isOwn ? ' own' : '');
+                    div.style.marginBottom = '6px';
+                    div.innerHTML = `
+                        <div class="msg-avatar" style="font-size:20px;">${isOwn ? data.userAvatar : '👤'}</div>
+                        <div class="msg-body" style="padding:6px 14px;">
+                            <span class="msg-user ${isOwn ? 'me' : ''}" style="font-size:13px;">${msg.user}</span>
+                            <div class="msg-text" style="font-size:14px;">${msg.text}</div>
+                            <span class="msg-time">${msg.time || getTime()}</span>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+                container.scrollTop = container.scrollHeight;
+            }
+
+            // ---------- ОТПРАВКА СООБЩЕНИЙ ----------
+            function sendMessage(text) {
+                if (!text || text.trim() === '') return;
+                const msg = {
+                    user: data.userName,
+                    avatar: data.userAvatar,
+                    text: text.trim(),
+                    time: getTime()
+                };
+                const msgs = getCurrentRoomMessages();
+                msgs.push(msg);
+                setCurrentRoomMessages(msgs);
+                saveData();
+                renderMessages();
+                document.getElementById('msgInput').value = '';
+            }
+
+            function sendPrivateMessage(text) {
+                if (!text || text.trim() === '' || !activePrivateTarget) return;
+                const target = activePrivateTarget;
+                if (!data.privateChats[target]) data.privateChats[target] = [];
+                const msg = {
+                    user: data.userName,
+                    text: text.trim(),
+                    time: getTime()
+                };
+                data.privateChats[target].push(msg);
+                saveData();
+                openPrivateChat(target); // перерендер
+                document.getElementById('privateMsgInput').value = '';
+                // также обновить список приватных
+                renderPrivateList();
+            }
+
+            // ---------- СОБЫТИЯ ----------
+            document.getElementById('sendBtn').addEventListener('click', () => {
+                const input = document.getElementById('msgInput');
+                sendMessage(input.value);
+            });
+
+            document.getElementById('msgInput').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    sendMessage(e.target.value);
+                }
+            });
+
+            document.getElementById('privateSendBtn').addEventListener('click', () => {
+                const input = document.getElementById('privateMsgInput');
+                sendPrivateMessage(input.value);
+            });
+
+            document.getElementById('privateMsgInput').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    sendPrivateMessage(e.target.value);
+                }
+            });
+
+            // Создать комнату
+            document.getElementById('addRoomBtn').addEventListener('click', () => {
+                const name = prompt('Название комнаты:');
+                if (name && name.trim()) {
+                    const id = 'room' + Date.now();
+                    data.rooms.push({ id, name: name.trim(), members: [data.userName] });
+                    data.messages[id] = [];
+                    data.currentRoom = id;
+                    saveData();
+                    renderAll();
+                }
+            });
+
+            // Удалить комнату
+            document.getElementById('deleteRoomBtn').addEventListener('click', () => {
+                if (data.rooms.length <= 1) {
+                    alert('Нельзя удалить последнюю комнату.');
+                    return;
+                }
+                const room = data.rooms.find(r => r.id === data.currentRoom);
+                if (room && confirm(`Удалить комнату «${room.name}»?`)) {
+                    data.rooms = data.rooms.filter(r => r.id !== data.currentRoom);
+                    delete data.messages[data.currentRoom];
+                    data.currentRoom = data.rooms[0].id;
+                    saveData();
+                    renderAll();
+                }
+            });
+
+            // Добавить приватный контакт
+            document.getElementById('addPrivateBtn').addEventListener('click', () => {
+                const name = prompt('Имя пользователя для приватного чата:');
+                if (name && name.trim() && name.trim() !== data.userName) {
+                    const target = name.trim();
+                    if (!data.privateList.includes(target)) {
+                        data.privateList.push(target);
+                        if (!data.privateChats[target]) data.privateChats[target] = [];
+                        saveData();
+                        renderAll();
+                        openPrivateChat(target);
+                    } else {
+                        alert('Такой контакт уже есть.');
+                    }
+                }
+            });
+
+            // Сменить аватар (двойной клик)
+            document.getElementById('chatAvatar').addEventListener('dblclick', () => {
+                const emojis = ['🦊', '🐉', '⚡', '🌀', '🌙', '⭐', '🔥', '💠', '🎮', '👾', '🤖', '👻', '🌈'];
+                const current = data.userAvatar;
+                let next = emojis[Math.floor(Math.random() * emojis.length)];
+                while (next === current && emojis.length > 1) next = emojis[Math.floor(Math.random() * emojis.length)];
+                data.userAvatar = next;
+                saveData();
+                renderAll();
+                // обновить аватар в сообщениях (только новые будут с новым)
+            });
+
+            // Сменить имя (клик по имени)
+            document.getElementById('chatUserName').addEventListener('dblclick', () => {
+                const newName = prompt('Введите новое имя:', data.userName);
+                if (newName && newName.trim() !== '') {
+                    data.userName = newName.trim();
+                    saveData();
+                    renderAll();
+                }
+            });
+
+            // ---------- СИСТЕМНОЕ СООБЩЕНИЕ ПРИ ЗАГРУЗКЕ ----------
+            function addSystemMessage(text) {
+                const msgs = getCurrentRoomMessages();
+                msgs.push({
+                    user: '⚡ Система',
+                    avatar: '⚡',
+                    text: text,
+                    time: getTime()
+                });
+                setCurrentRoomMessages(msgs);
+                saveData();
+                renderMessages();}
+
+            // ---------- ИНИЦИАЛИЗАЦИЯ ----------
+            renderAll();
+            addSystemMessage('🔗 Чат-система активирована. Привет, ' + data.userName + '!');
+
+            // автосохранение при уходе
+            window.addEventListener('beforeunload', saveData);
+
+            // если переключили комнату — закрываем приват
+            document.querySelectorAll('.room-item').forEach(el => {
+                // уже через рендер, но добавим дополнительно
+            });
+
+            // клик вне приватной панели — можно закрыть, но оставим как есть
+
+            console.log('⚡ Чат-система загружена!');
+        })();
+    </script>
+
+</body>
+</html>
