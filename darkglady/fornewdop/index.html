@@ -15,7 +15,7 @@
  padding: 20px;
  min-height: 100vh;
  display:
-flex;
+ flex;
  justify-content: center;
  align-items: center;
  }
@@ -30,7 +30,7 @@ flex;
  }
  .header {
  display:
-flex;
+ flex;
 
  justify-content: space-between;
  align-items: center;
@@ -38,7 +38,7 @@ flex;
  padding-bottom: 16px;
  margin-bottom: 20px;
 
-flex-wrap: wrap;
+ flex-wrap: wrap;
  gap: 10px;
  }
  .header h1 {
@@ -66,15 +66,15 @@ rgba(42,255,182,0.1); }
  border: 1px solid #1a2f2a;
 
  display:
-flex;
+ flex;
  gap: 12px;
  align-items: center;
 
-flex-wrap: wrap;
+ flex-wrap: wrap;
  }
  .peer-id-box input {
 
-flex: 1;
+ flex: 1;
  background: #0b141c;
  border: 1px solid #1f3f3a;
  border-radius: 40px;
@@ -150,12 +150,12 @@ flex;
 nowrap; }
  .input-area {
  display:
-flex;
+ flex;
  gap: 12px;
  }
  .input-area input {
 
-flex: 1;
+ flex: 1;
  background: #0b141c;
  border: 1px solid #1f3f3a;
  border-radius: 60px;
@@ -169,10 +169,10 @@ flex: 1;
  .user-list {
 
  display:
-flex;
+ flex;
  gap: 8px;
 
-flex-wrap: wrap;
+ flex-wrap: wrap;
  margin-bottom: 12px;
  padding: 10px;
  background: #0b141c;
@@ -188,8 +188,7 @@ flex-wrap: wrap;
  color: #8fb0a0;
  }
  .user-tag.online { border-color: #2affb6; color: #b3ffd9; }
- .user-tag.of
-fline { border-color: #4a3a3a; color: #6a5a5a; }
+ .user-tag.offline { border-color: #4a3a3a; color: #6a5a5a; }
  .info-box {
  background: #0a1418;
  border-radius: 12px;
@@ -204,7 +203,7 @@ fline { border-color: #4a3a3a; color: #6a5a5a; }
  .chat-container { padding: 16px; }
 
  .peer-id-box {
-flex-direction: column; }
+ flex-direction: column; }
  }
  </style>
 </head>
@@ -226,7 +225,7 @@ flex-direction: column; }
  <div class="peer-id-box">
  <span style="color:#6a8f7a;">🆔 Твой ID:</span>
  <input type="text" id="myPeerId" readonly style="
-flex:1; background:#0b141c;
+ flex:1; background:#0b141c;
 border:1px solid #1f3f3a; border-radius:40px; padding:10px 18px; color:#b3ffd9; fontfamily:inherit; outline:none;" placeholder="Загрузка..." />
  <button class="btn" onclick="copyPeerId()">📋 Копировать</button>
  <button class="btn btn-danger" onclick="resetConnection()"
